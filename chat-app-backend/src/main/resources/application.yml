@@ -1,7 +1,10 @@
 server:
   port: 8081
+  servlet:
+    context-path: /api
   error:
     include-message: always
+    include-stacktrace: on_param
 
 spring:
   datasource:
@@ -26,3 +29,9 @@ spring:
     user: postgres
     password: postgres
     schemas: chat-app-backend
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
