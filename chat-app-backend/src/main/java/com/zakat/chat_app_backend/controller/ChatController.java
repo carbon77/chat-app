@@ -15,6 +15,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/v1/chats")
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class ChatController {
 
     private final ChatService chatService;
