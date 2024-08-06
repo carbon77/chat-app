@@ -5,10 +5,14 @@ import {LoginPage} from "./pages/LoginPage";
 import {Root} from "./pages/Root";
 import {Typography} from "@mui/material";
 import {ChatsPage} from "./pages/ChatsPage";
+import {SidebarPageTemplate} from "./pages/SidebarPageTemplate";
+import {FriendsPage} from "./pages/FriendsPage";
+import {NotificationsPage} from "./pages/NotificationsPage";
 
 const protectedPages: RouteObject[] = [
     {
         path: '/',
+        element: <SidebarPageTemplate showSidebar={true}/>,
         children: [
             {
                 index: true,
@@ -26,6 +30,14 @@ const protectedPages: RouteObject[] = [
                 path: '/settings',
                 element: <ProtectedPage><Typography variant={"h3"}>Settings page</Typography></ProtectedPage>,
             },
+            {
+                path: '/friends',
+                element: <ProtectedPage><FriendsPage/></ProtectedPage>
+            },
+            {
+                path: '/notifications',
+                element: <ProtectedPage><NotificationsPage/></ProtectedPage>
+            }
         ]
     },
 ]

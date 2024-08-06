@@ -11,7 +11,7 @@ export const Root = () => {
 
             <Box sx={{
                 mt: '80px',
-                px: '20%',
+                px: '15%',
             }}>
                 <Outlet/>
             </Box>

@@ -23,7 +23,7 @@ export const MyAppBar = () => {
                 <Toolbar disableGutters sx={{
                     px: '20%',
                 }}>
-                    <ChatIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
+                    <ChatIcon onClick={() => navigate("/")} sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
                     <Typography
                         variant="h5"
                         noWrap

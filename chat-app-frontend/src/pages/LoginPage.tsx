@@ -35,7 +35,6 @@ export const LoginPage = () => {
                     <Typography variant={"h2"} sx={{mb: '50px'}}>Chat App</Typography>
 
                     <Button fullWidth variant={"contained"} onClick={onLoginClick}>Login</Button>
-                    <Button fullWidth variant={"contained"} onClick={() => auth.signoutRedirect()}>Logout</Button>
                 </Stack>
             </Paper>
         </Container>
