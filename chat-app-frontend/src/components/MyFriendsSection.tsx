@@ -1,9 +1,10 @@
-import {Alert, CircularProgress, List, Paper, Typography} from "@mui/material";
+import {Alert, Button, CircularProgress, List, Paper, Typography} from "@mui/material";
 import React, {useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "../hooks";
-import {fetchFriends} from "../store/friendsReducer";
+import {deleteFriend, fetchFriends} from "../store/friendsReducer";
 import {useAuth} from "react-oidc-context";
-import {FriendListItem} from "./FriendListItem";
+import {UserListItem} from "./UserListItem";
+import {Delete} from "@mui/icons-material";
 
 export const MyFriendsSection = () => {
     const auth = useAuth()
@@ -17,6 +18,14 @@ export const MyFriendsSection = () => {
         }
     }, [dispatch]);
 
+    const handleDeleteFriend = (friendId: string) => () => {
+        const userId = auth.user?.profile.sub
+
+        if (auth.isAuthenticated && userId) {
+            dispatch(deleteFriend({userId, friendId}))
+        }
+    }
+
     return (
         <Paper elevation={3}>
             <Typography variant={"h4"} sx={{px: 2, py: 1}}>Friends</Typography>
@@ -26,7 +35,20 @@ export const MyFriendsSection = () => {
                     failed: <Alert severity={"error"}>{error}</Alert>,
                     finished: <List>
                         {friends?.map(friend => (
-                            <FriendListItem key={friend.id} friend={friend}/>
+                            <UserListItem
+                                key={friend.id}
+                                friend={friend}
+                                secondaryAction={
+                                    <Button variant={"text"} color={"primary"} size={"small"}>Send message</Button>
+                                }
+                                menuActions={[
+                                    {
+                                        text: 'Delete',
+                                        icon: <Delete />,
+                                        onClick: handleDeleteFriend(friend.id),
+                                    }
+                                ]}
+                            />
                         ))}
                     </List>
                 }[status]

@@ -41,8 +41,16 @@ export const fetchFriends = createAsyncThunk(
 
 export const deleteFriend = createAsyncThunk(
     'friends/delete',
-    async ({userId, friendId}: {userId: string, friendId: string}, thunkAPI) => {
+    async ({userId, friendId}: { userId: string, friendId: string }, thunkAPI) => {
         const response = await apiClient.delete(`/v1/users/${userId}/friends/${friendId}`)
+        return friendId
+    }
+)
+
+export const addFriend = createAsyncThunk(
+    'friends/add',
+    async ({userId, friendId}: { userId: string, friendId: string }, thunkAPI) => {
+        const response = await apiClient.post(`/v1/users/${userId}/friends/${friendId}`)
         return friendId
     }
 )
