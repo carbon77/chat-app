@@ -1,9 +1,11 @@
 import {configureStore} from "@reduxjs/toolkit";
 import {chatsSlice} from "./chatsReducer";
+import {friendsSlice} from "./friendsReducer";
 
 const store = configureStore({
     reducer: {
-        chats: chatsSlice.reducer
+        chats: chatsSlice.reducer,
+        friends: friendsSlice.reducer,
     }
 })
 

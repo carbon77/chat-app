@@ -1,14 +1,8 @@
-import {Chat} from "../types";
+import {Chat, ReducerState} from "../types";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import apiClient from "../apiClient";
 
-export type ChatsReducerState = {
-    status: 'finished' | 'loading' | 'failed',
-    data?: Chat[],
-    error?: string
-}
-
-const initialState: ChatsReducerState = {
+const initialState: ReducerState<Chat[]> = {
     status: 'loading',
 }
 

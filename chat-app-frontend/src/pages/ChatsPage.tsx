@@ -3,7 +3,7 @@ import {
     Box,
     CircularProgress,
     Container,
-    List,
+    List, ListItem,
     ListItemButton,
     ListItemText,
     Paper,
@@ -33,9 +33,11 @@ export const ChatsPage = () => {
                             {error ? <Alert severity={"error"}>{error}</Alert> : (
                                 <List>
                                     {data?.map(chat => (
-                                        <ListItemButton key={chat.name}>
-                                            <ListItemText primary={chat.name}/>
-                                        </ListItemButton>
+                                        <ListItem disablePadding key={chat.name}>
+                                            <ListItemButton>
+                                                <ListItemText primary={chat.name}/>
+                                            </ListItemButton>
+                                        </ListItem>
                                     ))}
                                 </List>
                             )}
