@@ -35,3 +35,11 @@ management:
     web:
       exposure:
         include: '*'
+
+app:
+  keycloak-client:
+    server-url: http://localhost:9080
+    realm: master
+    client-id: admin-cli
+    username: admin
+    password: admin
