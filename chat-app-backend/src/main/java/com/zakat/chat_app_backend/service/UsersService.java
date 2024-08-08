@@ -1,5 +1,7 @@
 package com.zakat.chat_app_backend.service;
 
+import com.zakat.chat_app_backend.dto.UserDto;
+import com.zakat.chat_app_backend.mapper.UserDtoMapper;
 import com.zakat.chat_app_backend.model.Friendship;
 import com.zakat.chat_app_backend.model.FriendshipId;
 import com.zakat.chat_app_backend.repository.FriendshipRepository;
@@ -19,8 +21,9 @@ import java.util.stream.Collectors;
 public class UsersService {
     private final Keycloak keycloak;
     private final FriendshipRepository friendshipRepository;
+    private final UserDtoMapper mapper;
 
-    public List<UserRepresentation> searchByFirstAndLastName(String query) {
+    public List<UserDto> searchByFirstAndLastName(String query) {
         return keycloak.realm("chat-app")
                 .users()
                 .list()
@@ -29,11 +32,12 @@ public class UsersService {
                         user.getFirstName().toUpperCase().contains(query.toUpperCase()) ||
                                 user.getLastName().toUpperCase().contains(query.toUpperCase())
                 )
+                .map(mapper::toDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<UserRepresentation> getFriendsByUser(UUID userId) {
+    public List<UserDto> getFriendsByUser(UUID userId) {
         var friendships = friendshipRepository.findById_UserId(userId);
         var friendsIds = friendships.stream().map(fs -> fs.getId().getFriendId().toString()).collect(Collectors.toSet());
 
@@ -41,7 +45,9 @@ public class UsersService {
                 .realm("chat-app")
                 .users()
                 .list()
-                .stream().filter(user -> friendsIds.contains(user.getId()))
+                .stream()
+                .filter(user -> friendsIds.contains(user.getId()))
+                .map(mapper::toDto)
                 .toList();
         return users;
     }
