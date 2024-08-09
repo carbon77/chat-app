@@ -1,11 +1,19 @@
 package com.zakat.chat_app_backend.service;
 
 import com.zakat.chat_app_backend.dto.CreateChatRequest;
+import com.zakat.chat_app_backend.dto.InputMessageDto;
+import com.zakat.chat_app_backend.dto.OutputMessageDto;
 import com.zakat.chat_app_backend.dto.PatchChatRequest;
+import com.zakat.chat_app_backend.mapper.OutputMessageDtoMapper;
 import com.zakat.chat_app_backend.model.Chat;
+import com.zakat.chat_app_backend.model.Message;
 import com.zakat.chat_app_backend.repository.ChatRepository;
+import com.zakat.chat_app_backend.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,7 +26,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ChatService {
 
+    private final Logger logger = LoggerFactory.getLogger(ChatService.class);
     private final ChatRepository chatRepository;
+    private final UsersService usersService;
+    private final SimpMessageSendingOperations simpMessageSendingOperations;
+    private final MessageRepository messageRepository;
+    private final OutputMessageDtoMapper outputMessageDtoMapper;
 
 
     @Transactional(readOnly = true)
@@ -65,5 +78,30 @@ public class ChatService {
         }
 
         return chat;
+    }
+
+    public void sendMessageToChat(InputMessageDto message, UUID chatId) {
+        logger.info("Send message");
+        var sender = usersService.getUserRepById(message.senderId());
+        var outputMessage = Message.builder()
+                .senderId(UUID.fromString(sender.getId()))
+                .senderFirstName(sender.getFirstName())
+                .senderLastName(sender.getLastName())
+                .chat(findById(chatId))
+                .text(message.text())
+                .sentAt(LocalDateTime.now())
+                .build();
+
+        messageRepository.save(outputMessage);
+        simpMessageSendingOperations.convertAndSend(
+                "/topic/" + chatId,
+                outputMessageDtoMapper.toDto(outputMessage)
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<OutputMessageDto> findMessagesByChatId(UUID chatId) {
+        return messageRepository.findByChat_Id(chatId)
+                .stream().map(outputMessageDtoMapper::toDto).toList();
     }
 }

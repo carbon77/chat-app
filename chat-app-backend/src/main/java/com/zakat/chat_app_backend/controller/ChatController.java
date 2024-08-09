@@ -1,11 +1,15 @@
 package com.zakat.chat_app_backend.controller;
 
 import com.zakat.chat_app_backend.dto.CreateChatRequest;
+import com.zakat.chat_app_backend.dto.InputMessageDto;
+import com.zakat.chat_app_backend.dto.OutputMessageDto;
 import com.zakat.chat_app_backend.dto.PatchChatRequest;
 import com.zakat.chat_app_backend.model.Chat;
 import com.zakat.chat_app_backend.service.ChatService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -43,5 +47,15 @@ public class ChatController {
     @DeleteMapping("{chatId}")
     public void delete(@PathVariable UUID chatId) {
         chatService.delete(chatId);
+    }
+
+    @GetMapping("{chatId}/messages")
+    public List<OutputMessageDto> findMessagesByChatId(@PathVariable UUID chatId) {
+        return chatService.findMessagesByChatId(chatId);
+    }
+
+    @MessageMapping("/chat/{chatId}")
+    public void send(InputMessageDto message, @DestinationVariable("chatId") UUID chatId) {
+        chatService.sendMessageToChat(message, chatId);
     }
 }

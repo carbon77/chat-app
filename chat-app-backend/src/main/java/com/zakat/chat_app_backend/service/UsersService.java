@@ -23,6 +23,13 @@ public class UsersService {
     private final FriendshipRepository friendshipRepository;
     private final UserDtoMapper mapper;
 
+    public UserRepresentation getUserRepById(UUID userId) {
+        return keycloak.realm("chat-app")
+                .users()
+                .get(userId.toString())
+                .toRepresentation();
+    }
+
     public List<UserDto> searchByFirstAndLastName(String query) {
         return keycloak.realm("chat-app")
                 .users()
