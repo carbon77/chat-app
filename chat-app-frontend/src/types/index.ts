@@ -20,3 +20,13 @@ export type User = {
     firstName: string,
     lastName: string,
 }
+
+export type Message = {
+    messageId: string,
+    senderId: string,
+    chatId: string,
+    senderFirstName: string,
+    senderLastName: string,
+    text: string,
+    sentAt: string,
+}

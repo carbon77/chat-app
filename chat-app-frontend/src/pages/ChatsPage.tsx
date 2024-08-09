@@ -2,8 +2,8 @@ import {
     Alert,
     Box,
     CircularProgress,
-    Container,
-    List, ListItem,
+    List,
+    ListItem,
     ListItemButton,
     ListItemText,
     Paper,
@@ -13,6 +13,7 @@ import {
 import React, {useEffect} from 'react'
 import {useAppDispatch, useAppSelector} from "../hooks";
 import {fetchChats} from "../store/chatsReducer";
+import {Link as RouterLink} from "react-router-dom"
 
 export const ChatsPage = () => {
     const {status, data, error} = useAppSelector(state => state.chats)
@@ -23,7 +24,7 @@ export const ChatsPage = () => {
     }, [dispatch]);
 
     return (
-        <Container>
+        <Box>
             <Stack>
                 <Paper elevation={3}>
                     <Typography sx={{px: 2, py: 1}} variant={"h3"}>Chats</Typography>
@@ -34,7 +35,7 @@ export const ChatsPage = () => {
                                 <List>
                                     {data?.map(chat => (
                                         <ListItem disablePadding key={chat.name}>
-                                            <ListItemButton>
+                                            <ListItemButton component={RouterLink} to={`/chats/${chat.id}`}>
                                                 <ListItemText primary={chat.name}/>
                                             </ListItemButton>
                                         </ListItem>
@@ -45,6 +46,6 @@ export const ChatsPage = () => {
                     </Box>
                 </Paper>
             </Stack>
-        </Container>
+        </Box>
     );
 };

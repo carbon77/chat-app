@@ -1,6 +1,6 @@
 import {useAuth} from "react-oidc-context";
 import {Navigate} from "react-router-dom";
-import React, {useEffect} from "react";
+import React from "react";
 import {Alert, CircularProgress, Stack, Typography} from "@mui/material";
 
 type ProtectedPageProps = {
@@ -16,10 +16,6 @@ export const ProtectedPage = (props: ProtectedPageProps) => {
         case "signinRedirect":
             return <div>Signing you out...</div>
     }
-
-    useEffect(() => {
-        console.log(auth)
-    }, [auth])
 
     if (auth.isLoading) {
         return (

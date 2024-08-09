@@ -8,6 +8,7 @@ import {ChatsPage} from "./pages/ChatsPage";
 import {SidebarPageTemplate} from "./pages/SidebarPageTemplate";
 import {FriendsPage} from "./pages/FriendsPage";
 import {NotificationsPage} from "./pages/NotificationsPage";
+import {ChatPage} from "./pages/ChatPage";
 
 const protectedPages: RouteObject[] = [
     {
@@ -21,6 +22,10 @@ const protectedPages: RouteObject[] = [
             {
                 path: '/chats',
                 element: <ProtectedPage><ChatsPage/></ProtectedPage>
+            },
+            {
+                path: '/chats/:chatId',
+                element: <ProtectedPage><ChatPage/></ProtectedPage>
             },
             {
                 path: '/profile',

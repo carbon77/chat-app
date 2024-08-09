@@ -11,25 +11,25 @@ export const SidebarPageTemplate = ({showSidebar = true}: SidebarPageTemplatePro
     const links = [
         {
             text: 'Chats',
-            icon: <Chat color={"primary"} />,
+            icon: <Chat color={"primary"}/>,
             to: '/chats',
         },
         {
             text: 'Friends',
-            icon: <People color={"primary"} />,
+            icon: <People color={"primary"}/>,
             to: '/friends',
         },
         {
             text: 'Notifications',
-            icon: <Notifications color={"primary"} />,
+            icon: <Notifications color={"primary"}/>,
             to: '/notifications',
         },
     ]
 
     return (
-        <Grid container>
+        <Grid container spacing={2}>
             {showSidebar ? (
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                     <Paper elevation={3}>
                         <List>
                             {links.map(link => (
@@ -47,7 +47,7 @@ export const SidebarPageTemplate = ({showSidebar = true}: SidebarPageTemplatePro
                 </Grid>
             ) : null}
 
-            <Grid item xs={showSidebar ? 9 : 12}>
+            <Grid item md={showSidebar ? 9 : 12} xs={12}>
                 <Outlet/>
             </Grid>
         </Grid>

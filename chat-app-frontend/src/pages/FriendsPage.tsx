@@ -1,5 +1,5 @@
 import {People, Search} from "@mui/icons-material";
-import {Container, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper} from "@mui/material";
+import {Box, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper} from "@mui/material";
 import React, {useState} from 'react'
 import {MyFriendsSection} from "../components/MyFriendsSection";
 import {SearchFriendsSection} from "../components/SearchFriendsSection";
@@ -8,8 +8,8 @@ export const FriendsPage = () => {
     const [section, setSection] = useState<'friends' | 'search'>('friends')
 
     return (
-        <Container>
-            <Grid container spacing={3}>
+        <Box>
+            <Grid container spacing={2}>
                 <Grid item xs={12} md={8}>
                     {
                         {
@@ -41,6 +41,6 @@ export const FriendsPage = () => {
                     </Paper>
                 </Grid>
             </Grid>
-        </Container>
+        </Box>
     );
 };
