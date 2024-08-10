@@ -51,7 +51,7 @@ public class ChatService {
         var chat = new Chat();
 
         chat.setName(req.name());
-        chat.setIsGroup(req.isGroup());
+        chat.setIsDialog(req.isDialog());
         chat.setUserIds(req.userIds());
         chat.setSentAt(LocalDateTime.now());
 

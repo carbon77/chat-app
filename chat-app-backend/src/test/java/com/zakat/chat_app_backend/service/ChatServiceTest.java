@@ -46,7 +46,7 @@ class ChatServiceTest {
         chat = new Chat();
         chat.setId(chatId);
         chat.setName(createChatRequest.name());
-        chat.setIsGroup(createChatRequest.isGroup());
+        chat.setIsDialog(createChatRequest.isDialog());
         chat.setUserIds(createChatRequest.userIds());
     }
 
@@ -89,7 +89,7 @@ class ChatServiceTest {
         assertNotNull(createdChat.getSentAt());
         assertEquals(chatId, createdChat.getId());
         assertEquals(createChatRequest.name(), createdChat.getName());
-        assertEquals(createChatRequest.isGroup(), createdChat.getIsGroup());
+        assertEquals(createChatRequest.isDialog(), createdChat.getIsDialog());
         assertEquals(createChatRequest.userIds(), createdChat.getUserIds());
         verify(chatRepository, times(1)).save(any(Chat.class));
     }

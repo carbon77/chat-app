@@ -1,0 +1,1 @@
+ALTER TABLE chats RENAME COLUMN is_group TO is_dialog;

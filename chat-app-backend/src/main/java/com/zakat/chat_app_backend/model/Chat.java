@@ -21,7 +21,7 @@ public class Chat {
     @Column(name = "chat_name")
     private String name;
 
-    private Boolean isGroup;
+    private Boolean isDialog;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime sentAt;

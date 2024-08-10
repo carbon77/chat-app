@@ -11,8 +11,8 @@ public record CreateChatRequest(
         @NotBlank(message = "Name is mandatory")
         String name,
 
-        @NotNull(message = "The field isGroup is not specified")
-        Boolean isGroup,
+        @NotNull(message = "The field isDialog is not specified")
+        Boolean isDialog,
 
         @NotEmpty(message = "Can't create chat without users")
         List<UUID> userIds
