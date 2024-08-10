@@ -16,6 +16,8 @@ export type Chat = {
     isDialog: boolean,
     sentAt: string,
     userIds: string[],
+    lastMessage?: Message,
+    dialogUsersNames?: Record<string, string>
 }
 
 export type User = {

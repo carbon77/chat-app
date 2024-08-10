@@ -1,9 +1,7 @@
 package com.zakat.chat_app_backend.service;
 
-import com.zakat.chat_app_backend.dto.CreateChatRequest;
-import com.zakat.chat_app_backend.dto.InputMessageDto;
-import com.zakat.chat_app_backend.dto.OutputMessageDto;
-import com.zakat.chat_app_backend.dto.PatchChatRequest;
+import com.zakat.chat_app_backend.dto.*;
+import com.zakat.chat_app_backend.mapper.ChatDtoMapper;
 import com.zakat.chat_app_backend.mapper.OutputMessageDtoMapper;
 import com.zakat.chat_app_backend.model.Chat;
 import com.zakat.chat_app_backend.model.Message;
@@ -21,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +31,7 @@ public class ChatService {
     private final SimpMessageSendingOperations simpMessageSendingOperations;
     private final MessageRepository messageRepository;
     private final OutputMessageDtoMapper outputMessageDtoMapper;
+    private final ChatDtoMapper chatDtoMapper;
 
 
     @Transactional(readOnly = true)
@@ -44,6 +44,10 @@ public class ChatService {
     @Transactional(readOnly = true)
     public List<Chat> findAllByUser(UUID userId) {
         return chatRepository.findByUserIdsContains(userId);
+    }
+
+    public List<ChatDto> findAllDtoByUser(UUID userId) {
+        return findAllByUser(userId).stream().map(chatDtoMapper::toDto).collect(Collectors.toList());
     }
 
     @Transactional

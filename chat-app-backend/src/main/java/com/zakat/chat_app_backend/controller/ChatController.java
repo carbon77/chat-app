@@ -1,9 +1,6 @@
 package com.zakat.chat_app_backend.controller;
 
-import com.zakat.chat_app_backend.dto.CreateChatRequest;
-import com.zakat.chat_app_backend.dto.InputMessageDto;
-import com.zakat.chat_app_backend.dto.OutputMessageDto;
-import com.zakat.chat_app_backend.dto.PatchChatRequest;
+import com.zakat.chat_app_backend.dto.*;
 import com.zakat.chat_app_backend.model.Chat;
 import com.zakat.chat_app_backend.service.ChatService;
 import jakarta.validation.Valid;
@@ -30,8 +27,8 @@ public class ChatController {
     }
 
     @GetMapping
-    public List<Chat> findAllByUser(Principal principal) {
-        return chatService.findAllByUser(UUID.fromString(principal.getName()));
+    public List<ChatDto> findAllByUser(Principal principal) {
+        return chatService.findAllDtoByUser(UUID.fromString(principal.getName()));
     }
 
     @PostMapping
