@@ -36,17 +36,25 @@ export const ChatPage = () => {
     const chat = chats?.find(chat => chat.id === chatId)
     const dispatch = useAppDispatch()
 
+    function setScrollTop() {
+        if (messagesListRef.current) {
+            messagesListRef.current.scrollTop = messagesListRef.current.scrollHeight
+        }
+    }
+
     useSubscription(`/topic/${chatId}`, message => {
         const body = JSON.parse(message.body) as Message
         dispatch(addMessage(body))
     })
 
     useEffect(() => {
+        setScrollTop()
+    }, [messages]);
+
+    useEffect(() => {
         if (chatId) {
             dispatch(fetchMessagesByChat(chatId)).then(() => {
-                if (messagesListRef.current) {
-                    messagesListRef.current.scrollTop = messagesListRef.current.scrollHeight
-                }
+                setScrollTop()
             })
         }
     }, [dispatch]);
@@ -85,27 +93,30 @@ export const ChatPage = () => {
                                 loading: <CircularProgress/>,
                                 failed: <Alert severity={"error"}>{error}</Alert>,
                                 finished: <Stack spacing={1} sx={{pr: 3}}>
-                                    {messages?.map(message => (
+                                    {messages?.map((message, idx) => (
                                         <Card sx={{
                                             width: 'auto',
+                                            minWidth: '200px',
                                             maxWidth: '400px',
                                             alignSelf: message.senderId === userId ? 'end' : 'start'
                                         }} key={message.messageId}>
-                                            <CardHeader
-                                                sx={{pb: 0}}
-                                                avatar={
-                                                    <Avatar sx={{bgcolor: red[500]}}>
-                                                        {message.senderFirstName[0] + message.senderLastName[0]}
-                                                    </Avatar>
-                                                }
-                                                action={
-                                                    <IconButton>
-                                                        <MoreVert/>
-                                                    </IconButton>
-                                                }
-                                                title={`${message.senderFirstName} ${message.senderLastName}`}
-                                                subheader={new Date(message.sentAt).toDateString()}
-                                            />
+                                            {(idx === 0 || messages[idx - 1].senderId !== message.senderId) ? (
+                                                <CardHeader
+                                                    sx={{pb: 0}}
+                                                    avatar={
+                                                        <Avatar sx={{bgcolor: red[500]}}>
+                                                            {message.senderFirstName[0] + message.senderLastName[0]}
+                                                        </Avatar>
+                                                    }
+                                                    action={
+                                                        <IconButton>
+                                                            <MoreVert/>
+                                                        </IconButton>
+                                                    }
+                                                    title={`${message.senderFirstName} ${message.senderLastName}`}
+                                                    subheader={new Date(message.sentAt).toDateString()}
+                                                />
+                                            ) : null}
                                             <CardContent>
                                                 <Typography variant={"body2"}>
                                                     {message.text}
