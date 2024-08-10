@@ -1,29 +1,26 @@
 package com.zakat.chat_app_backend.config.ws;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.messaging.support.MessageHeaderAccessor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import java.util.Objects;
-
 @Configuration
 @EnableWebSocketMessageBroker
+@RequiredArgsConstructor
+@Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    public static Logger logger = LoggerFactory.getLogger(WebSocketConfig.class);
-    public static String frontendHost = "http://localhost:3000";
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketConfig.class);
+    private static final String frontendHost = "http://localhost:3000";
+
+    private final WebSocketSecurityFilter webSocketSecurityFilter;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -39,18 +36,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new ChannelInterceptor() {
-            @Override
-            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                    String jwtString = Objects.requireNonNull(accessor.getFirstNativeHeader("Authorization")).substring(7);
-                    Authentication user = new BearerTokenAuthenticationToken(jwtString);
-                    accessor.setUser(user);
-                }
-
-                return message;
-            }
-        });
+        registration.interceptors(webSocketSecurityFilter);
     }
 }

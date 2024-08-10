@@ -19,6 +19,7 @@ public class SecurityConfiguration {
                             .requestMatchers("/actuator/**").permitAll()
                             .requestMatchers("/error/**").permitAll()
                             .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                            .requestMatchers("/chat/**", "/ws").permitAll()
                             .anyRequest().authenticated();
                 })
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
