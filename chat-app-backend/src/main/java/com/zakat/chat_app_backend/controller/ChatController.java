@@ -54,6 +54,12 @@ public class ChatController {
         return chatService.findMessagesByChatId(chatId);
     }
 
+    @GetMapping("findDialog")
+    public Chat findDialog(@RequestParam("u1") UUID user1Id, @RequestParam("u2") UUID user2id) {
+        return chatService.findDialogByUsers(user1Id, user2id);
+    }
+
+    // Stomp
     @MessageMapping("/chat/{chatId}")
     public void send(InputMessageDto message, @DestinationVariable("chatId") UUID chatId) {
         chatService.sendMessageToChat(message, chatId);

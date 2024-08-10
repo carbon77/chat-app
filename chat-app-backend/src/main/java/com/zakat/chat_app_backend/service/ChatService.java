@@ -104,4 +104,10 @@ public class ChatService {
         return messageRepository.findByChat_Id(chatId)
                 .stream().map(outputMessageDtoMapper::toDto).toList();
     }
+
+    @Transactional(readOnly = true)
+    public Chat findDialogByUsers(UUID user1Id, UUID user2Id) {
+        return chatRepository.findDialogByUsers(user1Id, user2Id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
 }
