@@ -5,24 +5,49 @@ import {deleteFriend, fetchFriends} from "../store/friendsReducer";
 import {useAuth} from "react-oidc-context";
 import {UserListItem} from "./UserListItem";
 import {Delete} from "@mui/icons-material";
+import {Chat, CreateChatRequest, User} from "../types";
+import apiClient from "../apiClient";
+import {useNavigate} from "react-router-dom";
+import {createChat} from "../store/chatsReducer";
 
 export const MyFriendsSection = () => {
     const auth = useAuth()
+    const userId = auth.user?.profile.sub
     const {status, data: friends, error} = useAppSelector(state => state.friends)
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
 
     useEffect(() => {
-        const userId = auth.user?.profile.sub
         if (auth.isAuthenticated && userId) {
             dispatch(fetchFriends(userId))
         }
     }, [dispatch]);
 
     const handleDeleteFriend = (friendId: string) => () => {
-        const userId = auth.user?.profile.sub
-
         if (auth.isAuthenticated && userId) {
             dispatch(deleteFriend({userId, friendId}))
+        }
+    }
+
+    const handleSendMessage = (friend: User) => async () => {
+        if (!userId) return
+
+        try {
+            const dialog: Chat = await apiClient.get("/v1/chats/findDialog", {
+                params: {
+                    u1: userId,
+                    u2: friend.id,
+                },
+            }).then(res => res.data)
+            navigate(`/chats/${dialog.id}`)
+        } catch (e) {
+            const req: CreateChatRequest = {
+                name: `Dialog ${auth.user?.profile.name} and ${friend.firstName} ${friend.lastName}`,
+                isDialog: true,
+                userIds: [userId, friend.id]
+            }
+            const dialog = await dispatch(createChat(req)).unwrap()
+            navigate(`/chats/${dialog.id}`)
         }
     }
 
@@ -39,12 +64,17 @@ export const MyFriendsSection = () => {
                                 key={friend.id}
                                 friend={friend}
                                 secondaryAction={
-                                    <Button variant={"text"} color={"primary"} size={"small"}>Send message</Button>
+                                    <Button
+                                        variant={"text"}
+                                        color={"primary"}
+                                        size={"small"}
+                                        onClick={handleSendMessage(friend)}
+                                    >Send message</Button>
                                 }
                                 menuActions={[
                                     {
                                         text: 'Delete',
-                                        icon: <Delete />,
+                                        icon: <Delete/>,
                                         onClick: handleDeleteFriend(friend.id),
                                     }
                                 ]}

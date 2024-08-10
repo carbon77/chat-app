@@ -1,4 +1,4 @@
-import {Chat, ReducerState} from "../types";
+import {Chat, CreateChatRequest, ReducerState} from "../types";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import apiClient from "../apiClient";
 
@@ -24,6 +24,10 @@ export const chatsSlice = createSlice({
             state.error = action.error.message
             state.status = 'failed'
         })
+
+        builder.addCase(createChat.fulfilled, (state, action) => {
+            state.data?.push(action.payload)
+        })
     },
 })
 
@@ -32,5 +36,13 @@ export const fetchChats = createAsyncThunk(
     async (_: void) => {
         const response = await apiClient.get("/v1/chats")
         return response.data as Chat[]
+    }
+)
+
+export const createChat = createAsyncThunk(
+    'chats/create',
+    async (req: CreateChatRequest): Promise<Chat> => {
+        const res = await apiClient.post("/v1/chats", req)
+        return res.data
     }
 )

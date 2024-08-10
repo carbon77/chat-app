@@ -4,10 +4,16 @@ export interface ReducerState<T> {
     error?: string,
 }
 
+export type CreateChatRequest = {
+    name: string,
+    isDialog: boolean,
+    userIds: string[],
+}
+
 export type Chat = {
     id: string,
     name: string,
-    isGroup: boolean,
+    isDialog: boolean,
     sentAt: string,
     userIds: string[],
 }
