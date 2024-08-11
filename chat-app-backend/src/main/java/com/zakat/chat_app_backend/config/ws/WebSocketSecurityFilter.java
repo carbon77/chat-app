@@ -7,7 +7,10 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -19,8 +22,18 @@ public class WebSocketSecurityFilter implements ChannelInterceptor {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             String jwtString = Objects.requireNonNull(accessor.getFirstNativeHeader("Authorization")).substring(7);
-            Authentication user = new BearerTokenAuthenticationToken(jwtString);
+            BearerTokenAuthenticationToken token = new BearerTokenAuthenticationToken(jwtString);
+
+            JwtDecoder decoder = JwtDecoders.fromOidcIssuerLocation("http://localhost:9080/realms/chat-app");
+            JwtAuthenticationProvider provider = new JwtAuthenticationProvider(decoder);
+
+            Authentication user = provider.authenticate(token);
             accessor.setUser(user);
+        }
+
+        if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
+            String chatId = accessor.getFirstNativeHeader("X-Chat-Id");
+            accessor.setHeader("X-Chat-Id", chatId);
         }
 
         return message;

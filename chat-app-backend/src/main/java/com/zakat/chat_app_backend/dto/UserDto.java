@@ -8,6 +8,7 @@ public record UserDto(
         String email,
         Boolean emailVerified,
         String firstName,
-        String lastName
+        String lastName,
+        boolean isOnline
 ) {
 }

@@ -46,6 +46,8 @@ export const ChatPage = () => {
     useSubscription(`/topic/${chatId}`, message => {
         const body = JSON.parse(message.body) as Message
         dispatch(addMessage(body))
+    }, {
+        'X-Chat-Id': chatId ? chatId : ''
     })
 
     useEffect(() => {

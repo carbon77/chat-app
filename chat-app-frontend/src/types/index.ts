@@ -27,6 +27,7 @@ export type User = {
     emailVerified: boolean,
     firstName: string,
     lastName: string,
+    isOnline: boolean,
 }
 
 export type Message = {

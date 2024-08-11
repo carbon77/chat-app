@@ -1,5 +1,5 @@
 import {User} from "../types";
-import {IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material";
+import {Badge, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material";
 import {MoreHoriz, Person} from "@mui/icons-material";
 import React, {MouseEventHandler, useState} from "react";
 
@@ -39,7 +39,9 @@ export const UserListItem = ({friend, secondaryAction, menuActions}: UserListIte
         >
             <ListItemButton>
                 <ListItemIcon>
-                    <Person/>
+                    <Badge badgeContent={friend.isOnline ? " " : 0} color={"success"} variant={"dot"}>
+                        <Person/>
+                    </Badge>
                 </ListItemIcon>
                 <ListItemText primary={friend.firstName} secondary={friend.lastName}/>
             </ListItemButton>
