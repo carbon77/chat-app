@@ -23,6 +23,7 @@ import {addMessage, fetchMessagesByChat} from "../store/messagesReducer";
 import {Message} from "../types";
 import {MoreVert, Send} from "@mui/icons-material";
 import {red} from "@mui/material/colors";
+import {getChatTitle} from "../utils";
 
 export const ChatPage = () => {
     const {chatId} = useParams()
@@ -83,7 +84,12 @@ export const ChatPage = () => {
         <Box>
             <Paper elevation={3}>
                 <Stack spacing={2} sx={{p: 2}} divider={<Divider flexItem/>}>
-                    <Typography variant={"h4"}>{chat?.name}</Typography>
+                    <Stack>
+                        <Typography variant={"h4"}>{getChatTitle(userId, chat)}</Typography>
+                        {chat?.isDialog ? null : (
+                            <Typography>{chat?.userIds.length} member{chat?.userIds.length === 1 ? '' : 's'}</Typography>
+                        )}
+                    </Stack>
                     <Box sx={{
                         maxHeight: '350px',
                         overflow: 'auto',
