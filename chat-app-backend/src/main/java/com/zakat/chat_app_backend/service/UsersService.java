@@ -30,6 +30,10 @@ public class UsersService {
                 .toRepresentation();
     }
 
+    public UserDto getUserDtoById(UUID userId) {
+        return mapper.toDto(getUserRepById(userId));
+    }
+
     public List<UserDto> searchByFirstAndLastName(String query) {
         return keycloak.realm("chat-app")
                 .users()

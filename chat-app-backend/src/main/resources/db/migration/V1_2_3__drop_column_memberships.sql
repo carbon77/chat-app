@@ -1,0 +1,1 @@
+ALTER TABLE chat_memberships DROP COLUMN user_full_name;

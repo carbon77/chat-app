@@ -39,7 +39,7 @@ export const MyFriendsSection = () => {
                     u2: friend.id,
                 },
             }).then(res => res.data)
-            navigate(`/chats/${dialog.id}`)
+            navigate(`/chats/${dialog}`)
         } catch (e) {
             const req: CreateChatRequest = {
                 name: `Dialog ${auth.user?.profile.name} and ${friend.firstName} ${friend.lastName}`,

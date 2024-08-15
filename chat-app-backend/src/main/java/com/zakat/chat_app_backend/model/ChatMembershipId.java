@@ -1,10 +1,9 @@
 package com.zakat.chat_app_backend.model;
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -15,20 +14,23 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FriendshipId implements Serializable {
+public class ChatMembershipId implements Serializable {
     private UUID userId;
-    private UUID friendId;
+
+    @ManyToOne
+    @JoinColumn(name = "chat_id")
+    private Chat chat;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FriendshipId that = (FriendshipId) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(friendId, that.friendId);
+        ChatMembershipId that = (ChatMembershipId) o;
+        return Objects.equals(userId, that.userId) && Objects.equals(chat, that.chat);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, friendId);
+        return Objects.hash(userId, chat);
     }
 }

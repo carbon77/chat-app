@@ -17,7 +17,19 @@ export type Chat = {
     sentAt: string,
     userIds: string[],
     lastMessage?: Message,
-    dialogUsersNames?: Record<string, string>
+    dialogUsersNames?: Record<string, string>,
+    countMembers: number,
+}
+
+export type ChatMembership = {
+    userId: string,
+    charId: string,
+    role: 'MEMBER' | 'ADMIN' | 'CREATOR',
+    isActive: boolean,
+    lastVisited: string,
+    joinedAt: string,
+    leftAt: string,
+    user: User
 }
 
 export type User = {

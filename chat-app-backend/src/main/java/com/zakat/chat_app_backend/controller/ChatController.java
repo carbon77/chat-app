@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -32,8 +33,8 @@ public class ChatController {
     }
 
     @PostMapping
-    public Chat create(@Valid @RequestBody CreateChatRequest req) {
-        return chatService.create(req);
+    public Chat create(Authentication user, @Valid @RequestBody CreateChatRequest req) {
+        return chatService.create(user, req);
     }
 
     @PatchMapping("{chatId}")
@@ -52,8 +53,13 @@ public class ChatController {
     }
 
     @GetMapping("findDialog")
-    public Chat findDialog(@RequestParam("u1") UUID user1Id, @RequestParam("u2") UUID user2id) {
+    public UUID findDialog(@RequestParam("u1") UUID user1Id, @RequestParam("u2") UUID user2id) {
         return chatService.findDialogByUsers(user1Id, user2id);
+    }
+
+    @GetMapping("{chatId}/members")
+    public List<ChatMembershipDto> findMembersByChat(@PathVariable UUID chatId) {
+        return chatService.findMembersByChat(chatId);
     }
 
     // Stomp

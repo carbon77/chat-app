@@ -22,13 +22,23 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         logger.info("Disconnect: {}", event);
-        onlineService.removeOnlineUser(event.getUser());
+        var user = event.getUser();
+
+        if (user == null) {
+            logger.info("User not found");
+            return;
+        }
+        onlineService.removeOnlineUser(user);
     }
 
     @EventListener
     public void handleConnectedEvent(SessionConnectedEvent event) {
         logger.info("Connect: {}", event);
         var user = event.getUser();
+        if (user == null) {
+            logger.info("User not found");
+            return;
+        }
         onlineService.addOnlineUser(UUID.fromString(user.getName()));
     }
 

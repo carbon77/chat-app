@@ -10,9 +10,14 @@ import java.util.UUID;
 
 public interface ChatRepository extends JpaRepository<Chat, UUID> {
 
-    List<Chat> findByUserIdsContains(UUID userId);
+    List<Chat> findByMemberships_Id_UserId(UUID userId);
 
-    @Query(value = "SELECT c FROM Chat c " +
-            "WHERE c.isDialog = true AND ?1 MEMBER OF c.userIds AND ?2 MEMBER OF c.userIds")
-    Optional<Chat> findDialogByUsers(UUID user1Id, UUID user2Id);
+    @Query(nativeQuery = true, value = "SELECT c.chat_id\n" +
+            "FROM \"chat-app-backend\".chats c\n" +
+            "JOIN \"chat-app-backend\".chat_memberships cm1 ON c.chat_id = cm1.chat_id\n" +
+            "JOIN \"chat-app-backend\".chat_memberships cm2 ON c.chat_id = cm2.chat_id\n" +
+            "WHERE c.is_dialog = TRUE\n" +
+            "AND cm1.user_id = ?1\n" +
+            "AND cm2.user_id = ?2\n")
+    Optional<UUID> findDialogByUsers(UUID user1Id, UUID user2Id);
 }

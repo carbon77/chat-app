@@ -4,6 +4,7 @@ import com.zakat.chat_app_backend.dto.ChatDto;
 import com.zakat.chat_app_backend.dto.OutputMessageDto;
 import com.zakat.chat_app_backend.model.Chat;
 import com.zakat.chat_app_backend.model.Message;
+import com.zakat.chat_app_backend.repository.ChatMembershipRepository;
 import com.zakat.chat_app_backend.repository.MessageRepository;
 import com.zakat.chat_app_backend.service.UsersService;
 import org.mapstruct.Mapper;
@@ -23,11 +24,14 @@ public abstract class ChatDtoMapper {
     @Autowired
     protected OutputMessageDtoMapper outputMessageDtoMapper;
     @Autowired
+    protected ChatMembershipRepository chatMembershipRepository;
+    @Autowired
     protected UsersService usersService;
 
     @Mappings(value = {
             @Mapping(source = "id", target = "lastMessage", qualifiedByName = "messageToOutputMessageDto"),
-            @Mapping(source = "chat", target = "dialogUsersNames", qualifiedByName = "getDialogUsersNames")
+            @Mapping(source = "chat", target = "dialogUsersNames", qualifiedByName = "getDialogUsersNames"),
+            @Mapping(target = "countMembers", expression = "java(chatMembershipRepository.countById_Chat_Id(chat.getId()))")
     })
     public abstract ChatDto toDto(Chat chat);
 
@@ -44,9 +48,9 @@ public abstract class ChatDtoMapper {
         var usersNames = new HashMap<UUID, String>();
 
         if (chat.getIsDialog()) {
-            for (var userId : chat.getUserIds()) {
-                var user = usersService.getUserRepById(userId);
-                usersNames.put(userId, user.getFirstName() + " " + user.getLastName());
+            for (var membership : chat.getMemberships()) {
+                var user = usersService.getUserRepById(membership.getId().getUserId());
+                usersNames.put(membership.getId().getUserId(), user.getFirstName() + " " + user.getLastName());
             }
         }
 

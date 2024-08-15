@@ -3,6 +3,7 @@ import {chatsSlice} from "./chatsReducer";
 import {friendsSlice} from "./friendsReducer";
 import {friendsSearchSlice} from "./friendsSearchReducer";
 import {messagesSlice} from "./messagesReducer";
+import {membershipsSlice} from "./membershipsReducer";
 
 const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
         friends: friendsSlice.reducer,
         friendsSearch: friendsSearchSlice.reducer,
         messages: messagesSlice.reducer,
+        memberships: membershipsSlice.reducer,
     }
 })
 

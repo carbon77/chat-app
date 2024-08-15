@@ -1,4 +1,4 @@
-import {createBrowserRouter, Navigate, RouteObject} from "react-router-dom";
+import {createBrowserRouter, Navigate, Outlet, RouteObject} from "react-router-dom";
 import React from 'react'
 import {ProtectedPage} from "./pages/ProtectedPage";
 import {LoginPage} from "./pages/LoginPage";
@@ -9,6 +9,8 @@ import {SidebarPageTemplate} from "./pages/SidebarPageTemplate";
 import {FriendsPage} from "./pages/FriendsPage";
 import {NotificationsPage} from "./pages/NotificationsPage";
 import {ChatPage} from "./pages/ChatPage";
+import {getUser} from "./apiClient";
+import {StompSessionProvider} from "react-stomp-hooks";
 
 const protectedPages: RouteObject[] = [
     {
@@ -60,7 +62,18 @@ export const router = createBrowserRouter([
         element: <Root/>,
         errorElement: <div>Page not found</div>,
         children: [
-            ...protectedPages,
+            {
+                path: '/',
+                element: (
+                    <StompSessionProvider url={"http://localhost:8081/api/chat"} connectHeaders={{
+                        Authorization: `Bearer ${getUser()?.access_token}`,
+                        myheader: 'hello'
+                    }} beforeConnect={() => console.log("connect")}><Outlet /></StompSessionProvider>
+                ),
+                children: [
+                    ...protectedPages
+                ]
+            },
             ...onlyAnonymousPages,
         ]
     },
