@@ -14,11 +14,12 @@ export type Chat = {
     id: string,
     name: string,
     isDialog: boolean,
-    sentAt: string,
+    createdAt: string,
     userIds: string[],
     lastMessage?: Message,
     dialogUsersNames?: Record<string, string>,
     countMembers: number,
+    countUnreadMessages: number,
 }
 
 export type ChatMembership = {

@@ -8,9 +8,10 @@ public record ChatDto(
         UUID id,
         String name,
         Boolean isDialog,
-        LocalDateTime sentAt,
+        LocalDateTime createdAt,
         OutputMessageDto lastMessage,
         Map<UUID, String> dialogUsersNames,
-        Long countMembers
+        Long countMembers,
+        Long countUnreadMessages
 ) {
 }

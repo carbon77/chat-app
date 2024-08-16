@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 @Getter
 @Setter
 @Entity
@@ -25,8 +24,13 @@ public class Chat {
     private Boolean isDialog;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
-    private LocalDateTime sentAt;
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "id.chat")
     private List<ChatMembership> memberships = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "last_message_id")
+    private Message lastMessage;
+
 }

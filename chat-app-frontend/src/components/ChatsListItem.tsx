@@ -1,5 +1,5 @@
 import {Chat} from "../types";
-import {Avatar, Card, CardActionArea, CardActions, CardHeader, IconButton} from "@mui/material";
+import {Avatar, Badge, Card, CardActionArea, CardActions, CardHeader, IconButton} from "@mui/material";
 import {MoreVert} from "@mui/icons-material";
 import React from 'react'
 import {red} from "@mui/material/colors";
@@ -22,7 +22,7 @@ export const ChatsListItem = ({chat}: ChatsListItemProps) => {
             <CardActionArea component={Link} to={`/chats/${chat.id}`}>
                 <CardHeader
                     sx={{
-                        py: 1
+                        py: 1.5
                     }}
                     title={getChatTitle(userId, chat)}
                     subheader={chat.lastMessage
@@ -30,9 +30,19 @@ export const ChatsListItem = ({chat}: ChatsListItemProps) => {
                         : null
                     }
                     avatar={
-                        <Avatar sx={{bgcolor: red[500]}}>
-                            {chat.isDialog ? 'D' : 'C'}
-                        </Avatar>
+                        <Badge
+                            badgeContent={chat.countUnreadMessages}
+                            color={"primary"}
+                            max={99}
+                            anchorOrigin={{
+                                horizontal: 'right',
+                                vertical: 'bottom',
+                            }}
+                        >
+                            <Avatar sx={{bgcolor: red[500]}}>
+                                {chat.isDialog ? 'D' : 'C'}
+                            </Avatar>
+                        </Badge>
                     }
                 />
             </CardActionArea>

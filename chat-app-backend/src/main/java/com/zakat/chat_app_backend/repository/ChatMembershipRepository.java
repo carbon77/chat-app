@@ -9,9 +9,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ChatMembershipRepository extends JpaRepository<ChatMembership, ChatMembershipId> {
-    long countById_Chat_Id(UUID chatId);
-
     List<ChatMembership> findByIsActiveTrueAndId_Chat_Id(UUID id);
 
     Optional<ChatMembership> findById_Chat_IdAndId_UserId(UUID chatId, UUID userId);
+
+    List<ChatMembership> findAllById_Chat_Id(UUID chatId);
 }

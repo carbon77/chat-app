@@ -46,13 +46,13 @@ public class ChatService {
         );
     }
 
-    @Transactional(readOnly = true)
-    public List<Chat> findAllByUser(UUID userId) {
-        return chatRepository.findByMemberships_Id_UserId(userId);
-    }
-
     public List<ChatDto> findAllDtoByUser(UUID userId) {
-        return findAllByUser(userId).stream().map(chatDtoMapper::toDto).collect(Collectors.toList());
+        logger.info("Fetching chats...");
+        var chats = chatRepository.findChatDtosByUserid(userId)
+                        .stream().map(chatDtoMapper::fromViewToDto)
+                        .toList();
+        logger.info("Chats have been fetched");
+        return chats;
     }
 
     @Transactional
@@ -62,7 +62,7 @@ public class ChatService {
 
         chat.setName(req.name());
         chat.setIsDialog(req.isDialog());
-        chat.setSentAt(LocalDateTime.now());
+        chat.setCreatedAt(LocalDateTime.now());
 
         chat = chatRepository.save(chat);
 
@@ -107,23 +107,28 @@ public class ChatService {
         return chat;
     }
 
+    @Transactional
     public void sendMessageToChat(InputMessageDto message, UUID chatId) {
         logger.info("Send message");
         var sender = usersService.getUserRepById(message.senderId());
+        var chat = findById(chatId);
         var outputMessage = Message.builder()
                 .senderId(UUID.fromString(sender.getId()))
                 .senderFirstName(sender.getFirstName())
                 .senderLastName(sender.getLastName())
-                .chat(findById(chatId))
+                .chat(chat)
                 .text(message.text())
                 .sentAt(LocalDateTime.now())
                 .build();
 
         messageRepository.save(outputMessage);
+        chat.setLastMessage(outputMessage);
+        chatRepository.save(chat);
         simpMessageSendingOperations.convertAndSend(
                 "/topic/" + chatId,
                 outputMessageDtoMapper.toDto(outputMessage)
         );
+        logger.info("Message has been sent");
     }
 
     @Transactional(readOnly = true)
