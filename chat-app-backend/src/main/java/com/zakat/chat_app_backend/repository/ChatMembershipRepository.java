@@ -13,5 +13,5 @@ public interface ChatMembershipRepository extends JpaRepository<ChatMembership, 
 
     List<ChatMembership> findByIsActiveTrueAndId_Chat_Id(UUID id);
 
-    Optional<ChatMembership> findById_Chat_IdAndId_UserId(UUID id, UUID userId);
+    Optional<ChatMembership> findById_Chat_IdAndId_UserId(UUID chatId, UUID userId);
 }

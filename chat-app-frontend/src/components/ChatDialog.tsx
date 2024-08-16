@@ -1,5 +1,6 @@
 import {
     Alert,
+    Badge,
     Box,
     Button,
     CircularProgress,
@@ -125,7 +126,10 @@ export const ChatDialog = (props: ChatDialogProps) => {
                                         }>
                                             <ListItemButton>
                                                 <ListItemIcon>
-                                                    <Person/>
+                                                    <Badge badgeContent={member.user.isOnline ? " " : 0}
+                                                           color={"success"} variant={"dot"}>
+                                                        <Person/>
+                                                    </Badge>
                                                 </ListItemIcon>
                                                 <ListItemText
                                                     primary={member.user.firstName + " " + member.user.lastName}
